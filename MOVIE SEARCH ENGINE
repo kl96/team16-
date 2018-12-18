@@ -1,0 +1,62 @@
+import pandas as pd#imports pandas
+
+from tkinter import * #import Tkinter package and create a window
+
+window = Tk()#imports possible GUI interface that will be done later!
+ 
+window.title("Welcome to Team16 movie search engine")
+
+window.geometry('350x200')
+
+lbl = Label(window, text="Hello")
+
+lbl.grid(column=0, row=0)
+ 
+txt = Entry(window,width=10)# create a textbox using Tkinter Entry class
+ 
+txt.grid(column=1, row=0)
+ 
+def clicked():
+ 
+    lbl.configure(text="Do you want to search by Year, Film, or Production Company?")
+ 
+btn = Button(window, text="Done", command=clicked)
+ 
+btn.grid(column=2, row=0)
+
+data =  pd.read_csv("movies.csv")#opens and reads the file 
+
+
+def filters():# defines the function
+    searchBy = input("Do you want to search by Year, Film, or Production Company? ").lower()#User input
+    searchBy = searchBy.rstrip()#removes any spaces at the right of the user input
+        
+    if searchBy == "film":#If user puts film 
+        search2()# runs the second search function
+    elif searchBy == "year":#If user puts year
+        search()#Runs first search function
+    elif searchBy == "production company":# if user puts production company 
+        search3()#search 3 runs 
+    else:
+        print("Sorry, please write exactly as the question asks, it is not case sensitive!")# if user inputs something incorrect input output this 
+        
+def search():# define function
+    year = input("What year would you like to search by?(after 2005) ")#ask user input after year was entered
+    var = data.loc[data['Years'] == int(year)]#Searchs through year column assiging var as that year if found 
+    print(var)#prints var
+            
+def search2():
+    film = input("What film do you want to search for? Make to type exactly the name(i.e Iron Man)")#ask user input after film was entered
+    film = film.rstrip()#removes spaces at end of input
+    wanted = data.loc[data['Films'].str.contains(film)]#searchs through Films column then locates anything that contains the film input, sets variable wanted as the located item 
+    print(wanted)
+    
+def search3():
+    productionCompany = input("What Production Company do you want to find? ")#ask user input after Production company was entered
+    newData = data.loc[data['Production Company'].str.contains(productionCompany)]#searchs through Production Company column then locates anything that contains the Production company input, sets variable newData as the located item  
+    print(newData)#prints variable defined as newData            
+                
+                
+filters()#runs the function 
+
+window.mainloop()
